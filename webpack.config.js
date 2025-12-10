@@ -12,11 +12,13 @@ const uglify = require("uglifyjs-webpack-plugin");
  
 module.exports = {
     devtool: 'source-map',
-    entry: "./src/index.js",//入口文件，就是上步骤的src目录下的index.js文件，
+    // 组件库入口，而不是示例站点入口
+    entry: "./src/lib.js",
     output: {
-        path: path.resolve(__dirname, './dist'),//输出路径，就是上步骤中新建的dist目录，
+        path: path.resolve(__dirname, './dist'),
         publicPath: '/dist/',
         filename: 'vueTreeToTable.min.js',
+        library: 'VueTreeToTable',
         libraryTarget: 'umd',
         umdNamedDefine: true
     },
@@ -47,6 +49,15 @@ module.exports = {
                 }
             }
         ]
+    },
+    // 让使用方自行提供 Vue，避免将 Vue 打包进库
+    externals: {
+        vue: {
+            root: 'Vue',
+            commonjs: 'vue',
+            commonjs2: 'vue',
+            amd: 'vue'
+        }
     },
     plugins: [
         new webpack.DefinePlugin({

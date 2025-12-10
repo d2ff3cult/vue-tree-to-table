@@ -8,11 +8,12 @@
  */
 
 import Vue from 'vue'
-import App from './App.vue'
-Vue.config.productionTip = false
-new Vue({
-  render: h => h(App),
-}).$mount('#app')
+import Main from './Main.vue'
+import router from './router'
 
-// import VueTreeToTable from './TableTree/index.vue'
-// export default VueTreeToTable
+Vue.config.productionTip = false
+
+new Vue({
+  router,
+  render: h => h(Main)
+}).$mount('#app')

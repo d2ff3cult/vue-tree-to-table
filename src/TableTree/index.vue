@@ -349,7 +349,14 @@ export default {
           maxColumnNum: this.maxColumnNum
         }
         const tableTree = new TableTree(config)
-        this.trList = tableTree.generate(this.extraColumn, this.extraColumnObj)
+        // 根据当前可见叶子生成额外列数据，保证折叠/展开时额外列与行对齐
+        const extraColumnObj = this.extraColumn
+          ? {
+              columns: this.extraColumnObj.columns || [],
+              list: this.buildExtraList(tree)
+            }
+          : this.extraColumnObj
+        this.trList = tableTree.generate(this.extraColumn, extraColumnObj)
         // console.log(this.trList)
       }
     },
@@ -454,6 +461,34 @@ export default {
         extraNodeList.push(e.filter(node => node.nodeType === 'extra'))
       })
       return extraNodeList
+    },
+    // 构造额外列数据：按当前可见叶子节点取 metrics，支持折叠后的汇总展示
+    buildExtraList(tree) {
+      const leaves = []
+      const rev = arr => {
+        arr.forEach(item => {
+          if (Array.isArray(item.chidrenList) && item.chidrenList.length > 0) {
+            rev(item.chidrenList)
+          } else {
+            leaves.push(item)
+          }
+        })
+      }
+      rev(tree)
+      return leaves.map((leaf, trIndex) => {
+        return (this.extraColumnObj.columns || []).map((col, colIndex) => {
+          const metricKey = col.metricKey || col.id
+          const value = leaf.metrics ? leaf.metrics[metricKey] : leaf[metricKey]
+          return {
+            nodeType: 'extra',
+            id: `${leaf.id}-${metricKey}-${trIndex}-${colIndex}`,
+            metricKey,
+            value,
+            colSpan: 1,
+            rowSpan: 1
+          }
+        })
+      })
     }
   }
 }

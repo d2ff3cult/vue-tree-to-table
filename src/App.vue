@@ -7,7 +7,7 @@
  * @LastEditTime: 2021-03-16 21:51:19
 -->
 <template>
-  <div>
+  <div class="docs-page">
     <!-- <input type="button" @click="showLog" value="button" />
     <Checkbox
       v-model="check1"
@@ -1222,13 +1222,13 @@ export default {
 </script>
 
 <style>
-#app {
+.docs-page {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 16px;
 }
 </style>
 <style lang="less" scoped>
